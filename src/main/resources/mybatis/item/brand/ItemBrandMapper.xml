@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.car.manage.mapper.item.brand.ItemBrandMapper">
+
+	<resultMap type="cn.car.manage.beans.orm.item.brand.ItemBrand" id="brand">
+		<id property="itemBrandID" javaType="int" column="item_brand_id" jdbcType="INTEGER" />
+		<result property="itemBrandName" javaType="String"
+			column="item_brand_name" jdbcType="VARCHAR" />
+		<result property="itemBrandCity" javaType="String"
+		column="item_brand_city" jdbcType="VARCHAR" />
+		<result property="createTime" javaType="String"
+			column="create_time" jdbcType="VARCHAR" />
+		<result property="spellID" javaType="int" column="spell_id"
+			jdbcType="INTEGER" />
+
+	</resultMap>
+
+	<resultMap type="cn.car.manage.beans.orm.item.ItemSeries" id="itemSeries">
+		<id property="itemSeriesID" javaType="int" column="item_series_id" jdbcType="INTEGER" />
+		<result property="itemSeriesName" javaType="String"
+			column="item_series_name" jdbcType="VARCHAR" />
+		<result property="itemBrandID" javaType="int" column="item_brand_id"
+			jdbcType="INTEGER" />
+		<collection  property="itemBrand"	ofType="cn.car.manage.beans.orm.item.brand.ItemBrand">
+			<id property="itemBrandID" javaType="int" column="item_brand_id" jdbcType="INTEGER" />
+			<result property="itemBrandName" javaType="String"
+				column="item_brand_name" jdbcType="VARCHAR" />
+			<result property="itemBrandCity" javaType="String"
+			column="item_brand_city" jdbcType="VARCHAR" />
+			<result property="createTime" javaType="String"
+				column="create_time" jdbcType="VARCHAR" />
+			<result property="spellID" javaType="int" column="spell_id"
+				jdbcType="INTEGER" />
+		</collection >
+	</resultMap>
+	<!-- 全部字段 -->
+	<sql id="brand_all_field">
+		item_brand_id,item_brand_name,item_brand_city,spell_id,create_time
+	</sql>
+
+	<!-- 插入 -->
+	<sql id="brand_add_field">
+		item_brand_name,item_brand_city,spell_id,create_time
+	</sql>
+
+	<insert id="addItemBrand" useGeneratedKeys="true" keyProperty="itemBrandID">
+	INSERT INTO t_item_brand (<include refid="brand_add_field"></include>) VALUES (#{itemBrandName},#{itemBrandCity},#{spellID},#{createTime})
+	</insert>
+	<select id="getItemBrandByBrandName" resultMap="itemSeries">
+		
+				SELECT
+			brand.item_brand_id,
+			brand.item_brand_name,
+			brand.item_brand_city,
+			brand.create_time,
+			itemSeries.item_series_id,
+			itemSeries.item_series_name
+		FROM
+			t_item_series itemSeries
+		LEFT JOIN t_item_brand brand ON itemSeries.item_brand_id = brand.item_brand_id
+		 <where>
+		   <if test="itemBrandName !=null">
+		       <bind name="itemBrandNameBind" value="'%'+itemBrandName + '%'"/>
+		       item_brand_name LIKE #{itemBrandNameBind}
+		   </if>
+		 </where>
+	</select>
+	
+	<select id="getItemBrandNameByBrandID" resultMap="itemSeries">
+		SELECT brand.item_brand_id,brand.item_brand_name,brand.item_brand_city,brand.create_time,itemSeries.item_series_id,itemSeries.item_series_name from t_item_brand brand
+		LEFT JOIN t_item_series itemSeries
+		ON brand.item_brand_id=itemSeries.item_brand_id
+		 where itemSeries.item_series_id=#{itemBrandID}
+	</select>
+	<select id="getAllBrandName" resultMap="brand">
+		select item_brand_name,item_brand_id from t_item_brand
+	</select>
+	<select id="getBrandByBrandName" resultMap="brand">
+		select item_brand_name,item_brand_id from t_item_brand where item_brand_name=#{itemBrandName}
+	</select>
+	 <!-- 删除 -->
+  	<delete id="deleteItemBrand" parameterType="list">
+		DELETE FROM t_item_series WHERE item_series_id IN
+		<foreach collection="itemBrandIDs" item="itemBrandID" open="(" close=")" separator=",">
+			#{itemBrandID}
+		</foreach>
+	</delete>
+	
+	 <!-- 更新 -->
+  <update id="updateItemBrand">
+    UPDATE t_item_brand brand LEFT JOIN t_item_series itemSeries
+    ON brand.item_brand_id=itemSeries.item_brand_id
+    SET brand.item_brand_name=#{itemBrandName},brand.item_brand_city=#{itemBrandCity},
+    brand.spell_id=#{spellID},brand.create_time=#{createTime},itemSeries.item_series_name=#{itemSeriesName}
+    WHERE itemSeries.item_series_id = #{itemSeriesID}
+  </update>
+  <select id="getAllBrandLetter" resultType="map">
+  	SELECT spell_letter as letter,item_brand_name as brandName FROM t_item_brand brand 
+	LEFT JOIN t_spell_letter letter
+	on brand.spell_id=letter.spell_id
+  </select>
+</mapper>

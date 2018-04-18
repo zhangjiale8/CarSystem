@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.car.manage.mapper.item.state.ItemOrderStateMapper">
+
+ <resultMap type="cn.car.manage.beans.orm.item.state.ItemAndOrderState" id="itemAndOrderState">
+    <id property="ID" 					    javaType="INTEGER" 		column="id" 						jdbcType="INTEGER"/>
+    <result property="name" 				javaType="String" 	column="name" 						jdbcType="VARCHAR"/>
+     <result property="value" 				javaType="String" 	column="value" 						jdbcType="VARCHAR"/>
+     <result property="nameID" 				javaType="int" 	column="name_id" 						jdbcType="INTEGER"/>
+  </resultMap>	
+  
+  <select id="getAllStateByName" resultMap="itemAndOrderState">
+  select value,name_id from t_constant where name=#{name}
+  </select>
+  
+
+  
+</mapper>

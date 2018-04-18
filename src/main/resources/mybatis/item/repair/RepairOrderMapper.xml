@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.car.manage.mapper.item.repair.RepairOrderMapper">
+
+	<resultMap type="cn.car.manage.beans.orm.item.repair.RepairOrder"
+		id="repairOrder">
+		<id property="repairOrderID" javaType="int" column="repair_id"
+			jdbcType="INTEGER" />
+		<result property="itemModelNum" javaType="String" column="item_model_num"
+			jdbcType="VARCHAR" />
+		<result property="customerName" javaType="String" column="customer_name"
+			jdbcType="VARCHAR" />
+		<result property="repairOrderType" javaType="String" column="repair_type"
+			jdbcType="VARCHAR" />
+		<result property="repairOrderDate" javaType="String" column="repair_date"
+			jdbcType="VARCHAR" />
+		<result property="repairPosition" javaType="String" column="repair_position"
+			jdbcType="VARCHAR" />
+		<result property="carCode"      javaType="String" column="car_code"
+			jdbcType="VARCHAR" />
+		<result property="repairCost" javaType="double" column="repair_cost"
+		jdbcType="DOUBLE" />
+		<result property="repairOrderCode" javaType="String" column="repair_code"
+		jdbcType="VARCHAR" />
+		<result property="phone" javaType="String" column="phone"
+		jdbcType="VARCHAR" />
+		<result property="repairOrderState" javaType="int" column="repair_state"
+		jdbcType="INTEGER" />
+		<result property="repairStateName" javaType="String" column="repair_state_name"
+		jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<!-- 全部字段 -->
+	<sql id="select">
+		repair_id,item_model_num,customer_name,car_code,repair_code,repair_cost,phone,
+		repair_position,repair_type,repair_state
+	</sql>
+
+	<!-- 插入 -->
+	<sql id="Repair_add_field">
+		item_model_num,customer_name,repair_date,car_code,repair_code,repair_cost,phone,
+		repair_position,repair_type
+	</sql>
+
+	<select id="getRepairOrderPage" resultMap="repairOrder">
+		select repair.repair_id,repair.item_model_num,repair.customer_name,FROM_UNIXTIME(repair.repair_date,'%Y-%m-%d') as repair_date,repair.car_code,repair.repair_code,repair.repair_cost,repair.phone,
+		repair.repair_position,constant.value as repair_state_name,repair.repair_type
+		from t_repair repair
+		Left join t_constant constant
+		on repair.repair_state=constant.name_id
+		where constant.name='repairOrderState'
+		<if test="repairOrderCode!=null">
+		<bind name="repairOrderCodeBind" value="'%'repairOrderCode + '%'"/>
+		and repair.repair_code like #{repairOrderCodeBind}
+		</if>
+		<if test="startTime!=null">
+		    and repair.repair_date >= UNIX_TIMESTAMP(#{startTime})
+        </if>
+        <if test="endTime!=null">
+	     and <![CDATA[repair.repair_date <= UNIX_TIMESTAMP(#{endTime})]]>
+        </if>
+		<if test="carCode">
+		<bind name="carCodeBind" value="'%'carCode + '%'"/>
+			and repair.car_code like #{carCodeBind}
+		</if>
+	</select>
+	<select id="getRepairOrderByRepairOrderID" resultMap="repairOrder">
+		select <include refid="select"></include> from t_repair where repair_id=#{repairOrderID}
+	</select>
+	<update id="updateRepairOrder">
+		update t_repair set item_model_num=#{itemModelNum},customer_name=#{customerName},car_code=#{carCode},
+		repair_cost=#{repairCost},phone=#{phone},repair_position=#{repairPosition},repair_type=#{repairOrderType}
+		where repair_id=#{repairOrderID}
+	</update>
+	<update id="updateRepairOrderState">
+		update t_repair set repair_state=#{repairOrderState}
+		where repair_id=#{repairOrderID}
+	</update>
+	<delete id="deleteRepairOrder">
+		delete from t_repair where repair_id in 
+		<foreach collection="list" item="repairOrderID" open="(" close=")" separator=",">
+			#{repairOrderID}
+		</foreach>
+	</delete>
+	<insert id="addRepairOrder">
+		insert into t_repair (<include refid="Repair_add_field"></include>) values (#{itemModelNum},#{customerName},UNIX_TIMESTAMP(now()),#{carCode},#{repairOrderCode},#{repairCost},#{phone},#{repairPosition},#{repairOrderType})
+	</insert>
+	<select id="getRepairOrderCount" resultType="java.lang.Integer">
+	select count(*) from t_repair
+	</select>
+</mapper>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.car.manage.mapper.item.attribute.ItemAttributeValueMapper">
+
+	<resultMap type="cn.car.manage.beans.orm.item.attribute.ItemAttributeValue" id="itemAttributeValue">
+		<id property="AttributeValueID" javaType="int" column="item_attr_id" jdbcType="INTEGER" />
+		<result property="attributeID" javaType="int" column="attribute_id"
+			jdbcType="INTEGER" />
+		<result property="itemID" javaType="long" column="item_id"
+			jdbcType="BIGINT" />
+		<result property="attributeValue" javaType="String"
+			column="item_attr_value" jdbcType="VARCHAR" />
+		<result property="attributeTypeID" javaType="int" column="attribute_type_id"
+			jdbcType="INTEGER" />
+
+	</resultMap>
+
+	<!-- 全部字段 -->
+	<sql id="itemAttribute_all_field">
+		item_id,attribute_id,attribute_type_id,item_attr_value
+	</sql>
+
+	<!-- 插入 -->
+	<sql id="attribute_input_type_add_field">
+		item_id,attribute_id,item_attr_value
+	</sql>
+
+	<!-- 所有字段 -->
+	<sql id="itemattributeValue_alias">
+		itemAttributeValue.item_attr_id,itemAttributeValue.item_id,itemAttributeValue.attribute_id,itemAttributeValue.item_attr_value
+	</sql>
+	
+	<select id="selectItemAttribute" resultType="map" parameterType="int">
+		select attributeType.attribute_type_id,attributeType.attribute_type_name,
+		attributeType.attribute_type_show_name,itemAttribute.attribute_id,itemAttribute.item_attr_name,attributeInputType.attr_input_type_name
+		FROM t_item_type_attribute itemTypeAttribute
+		LEFT JOIN t_attribute_type attributeType
+		ON itemTypeAttribute.attribute_type_id=attributeType.attribute_type_id
+		LEFT JOIN t_item_attribute itemAttribute
+		ON itemTypeAttribute.attribute_id=itemAttribute.attribute_id
+		LEFT JOIN t_attribute_input_type attributeInputType
+		ON itemAttribute.attr_input_type_id=attributeInputType.attr_input_type_id
+    	where itemTypeAttribute.item_classification_id=#{itemTypeID}
+    	ORDER BY attributeType.attribute_type_id
+	</select>
+	<select id="getItemAttributeValueByItemID" resultType="map" parameterType="int">
+	select attributeValue.item_attr_value,attributeType.attribute_type_name,
+		attributeType.attribute_type_show_name,itemAttribute.item_attr_name
+		FROM t_item_type_attribute itemTypeAttribute
+		LEFT JOIN t_attribute_type attributeType
+		ON itemTypeAttribute.attribute_type_id=attributeType.attribute_type_id
+		LEFT JOIN t_item_attribute itemAttribute
+		ON itemTypeAttribute.attribute_id=itemAttribute.attribute_id
+		LEFT JOIN t_item_attribute_value attributeValue
+		ON itemAttribute.attribute_id=attributeValue.attribute_id
+		LEFT JOIN t_attribute_input_type attributeInputType
+		ON itemAttribute.attr_input_type_id=attributeInputType.attr_input_type_id
+    	where attributeValue.item_id=#{itemID}
+    	ORDER BY attributeType.attribute_type_id
+	
+	</select>
+	<!-- 插入属性 -->
+	
+	<insert id="addItemAttributeValue" parameterType="list">
+		INSERT INTO t_item_attribute_value(<include refid="itemAttribute_all_field"/>) VALUES
+		<foreach collection="list" item="assetAttribute" separator=",">
+			(
+				#{assetAttribute.itemID},
+				#{assetAttribute.attributeID},
+				#{assetAttribute.attributeTypeID},
+				#{assetAttribute.attributeValue}
+			)
+		</foreach>
+	</insert>
+</mapper>

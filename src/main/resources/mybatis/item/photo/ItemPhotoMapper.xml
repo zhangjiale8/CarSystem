@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.car.manage.mapper.item.photo.ItemPhotoMapper">
+
+	<resultMap type="cn.car.manage.beans.orm.item.photo.ItemPhoto" id="itemPhoto">
+		<id property="photoID" javaType="int" column="photo_id" jdbcType="INTEGER" />
+		<result property="photoResource" javaType="String"
+			column="photo_resource" jdbcType="VARCHAR" />
+		<result property="itemID" javaType="long" column="item_id"
+			jdbcType="BIGINT" />
+		<result property="photoUse" javaType="int"
+			column="photo_use" jdbcType="INTEGER" />
+		
+	</resultMap>
+
+	
+	<!-- 全部字段 -->
+	<sql id="photo_all_field">
+		photo_id,photo_resource,item_id,photo_use
+	</sql>
+
+	<!-- 插入 -->
+	<sql id="photo_add_field">
+		photo_resource,item_id,photo_use
+	</sql>
+
+	<insert id="addItemPhoto">
+		insert 	into t_item_photo (photo_resource,item_id,photo_use) VALUES (#{photoResource},#{ItemID},#{photoUse})
+	</insert>
+	<select id="getItemPhotoByItemID" resultType="map">
+		select photo_resource from t_item_photo where item_id=#{itemID} and photo_use=2
+	</select>
+</mapper>

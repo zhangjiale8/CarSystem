@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.car.manage.mapper.item.order.OrderDetailedMapper">
+
+	<resultMap type="cn.car.manage.beans.orm.item.order.OrderDetailed"
+		id="orderDetailed">
+		<id property="orderDetailed" javaType="int" column="order_detailed_id"
+			jdbcType="INTEGER" />
+		<result property="itemID" javaType="long" column="item_id"
+			jdbcType="BIGINT" />
+		<result property="itemNum" javaType="int" column="item_num"
+			jdbcType="INTEGER" />
+		<result property="itemOrderID" javaType="int" column="order_id"
+			jdbcType="INTEGER" />
+		
+
+	</resultMap>
+
+
+	<!-- 全部字段 -->
+	<sql id="orderDetailed_all_field">
+		order_detailed_id,item_id,item_num,order_id
+	</sql>
+
+	<!-- 插入 -->
+	<sql id="orderDetailed_add_field">
+		item_id,order_id,item_num
+	</sql>
+
+	<insert id="addOrderDetailed">
+	insert into t_order_detailed (<include refid="orderDetailed_add_field"></include>) values (#{itemID},#{itemOrderID},#{itemNum})
+	</insert>
+</mapper>

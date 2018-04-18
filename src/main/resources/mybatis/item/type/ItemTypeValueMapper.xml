@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.car.manage.mapper.item.type.ItemTypeValueMapper">
+
+	<resultMap type="cn.car.manage.beans.orm.item.type.ItemTypeValue" id="itemTypeValue">
+		<id property="itemTypeValueID" javaType="INTEGER" column="item_type_value_id" jdbcType="INTEGER" />
+		<result property="itemTypeID" javaType="INTEGER"
+			column="item_type_id" jdbcType="INTEGER" />
+		<result property="itemTypeValue" javaType="String" column="item_type_value"
+			jdbcType="VARCHAR" />
+
+	</resultMap>
+
+	<!-- 用户全部字段 -->
+	<sql id="itemTypeValue_all_field">
+		item_type_value_id,item_type_id,item_type_value
+	</sql>
+
+	<!-- 插入 -->
+	<sql id="itemTypeValue_add_field">
+		item_type_id,item_type_value
+	</sql>
+
+
+</mapper>

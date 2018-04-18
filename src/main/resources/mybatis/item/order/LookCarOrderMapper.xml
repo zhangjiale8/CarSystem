@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.car.manage.mapper.item.order.LookCarOrderMapper">
+
+	<resultMap type="cn.car.manage.beans.orm.item.order.LookCarOrder"
+		id="lookCarOrder">
+		<id property="lookCarID" javaType="int" column="look_car_id"
+			jdbcType="INTEGER" />
+		<result property="itemID" javaType="long" column="item_id"
+			jdbcType="BIGINT" />
+		<result property="customerID" javaType="int" column="user_id"
+			jdbcType="INTEGER" />
+		<result property="phoneNum" javaType="String" column="phone_num"
+			jdbcType="VARCHAR" />
+		<result property="customerName" javaType="String" column="user_name"
+			jdbcType="VARCHAR" />
+		<result property="state" javaType="int" column="state"
+			jdbcType="INTEGER" />
+			<result property="orderState" javaType="int" column="order_state"
+			jdbcType="INTEGER" />
+		<result property="stateName" javaType="String" column="stateName"
+			jdbcType="VARCHAR" />
+		<result property="lookCarDate" javaType="String" column="look_car_date"
+			jdbcType="VARCHAR" />
+		<result property="createDate" javaType="String" column="create_date"
+			jdbcType="VARCHAR" />
+		<association property="item" javaType="cn.car.manage.beans.orm.item.Item">
+		<id property="itemID" javaType="long" column="item_id" jdbcType="BIGINT" />
+		<result property="itemClassificationID" javaType="int"
+			column="item_classification_id" jdbcType="INTEGER" />
+		<result property="itemShelfTime" javaType="String" column="item_shelf_time"
+			jdbcType="VARCHAR" />
+		<result property="itemDownTime" javaType="String" column="item_down_time"
+			jdbcType="VARCHAR" />
+		<result property="itemHot" javaType="String" column="item_hot"
+			jdbcType="VARCHAR" />
+		<result property="itemName" javaType="String" column="item_name"
+			jdbcType="VARCHAR" />
+		<result property="itemPrice" javaType="double" column="item_price"
+			jdbcType="DOUBLE" />
+		<result property="itemColor" javaType="String" column="item_color"
+			jdbcType="VARCHAR" />
+		<result property="itemCode" javaType="String" column="item_code"
+			jdbcType="VARCHAR" />
+		<result property="itemState" javaType="String" column="item_state"
+			jdbcType="VARCHAR" />
+		<result property="itemModel" javaType="String" column="item_model"
+			jdbcType="VARCHAR" />
+		<result property="itemStockNum" javaType="int" column="item_stock_num"
+			jdbcType="INTEGER" />
+			<result property="wareHouseID" javaType="int" column="warehouse_id"
+			jdbcType="INTEGER" />
+		<association property="itemClass" javaType="cn.car.manage.beans.orm.item.classification.ItemClassification">
+			<id property="itemClassificationID" javaType="long" column="item_classification_id" jdbcType="INTEGER" />
+			<result property="itemClassificationName" javaType="String" column="item_classification_name"
+			jdbcType="VARCHAR" />
+		</association>
+		</association>
+		<association property="customer" javaType="cn.car.manage.beans.orm.customer.Customer">
+			<id property="userID" 					javaType="INTEGER"  column="user_id" 						jdbcType="INTEGER"/>
+	    	<result property="userName" 				javaType="String" 	column="user_name" 						jdbcType="VARCHAR"/>
+	    	<result property="userPassWord" 			javaType="String" 	column="user_password" 					jdbcType="VARCHAR"/>
+	    	<result property="userShowName" 				javaType="String" 	column="user_show_name" 			jdbcType="VARCHAR"/>
+	    	<result property="userPhone" 			    javaType="String" 	column="user_phone" 					jdbcType="VARCHAR"/>
+	  		<result property="userJoinDate" 			javaType="String" 	column="user_join_date" 				jdbcType="VARCHAR"/>
+	  		<result property="state" 			        javaType="INTEGER" 	column="state" 				jdbcType="INTEGER"/>	
+			<association property="userRole"	javaType="cn.car.manage.beans.orm.system.UserRole">
+			<result property="userID" 					    javaType="INTEGER" 		column="user_id" jdbcType="INTEGER"/>
+	  		<result property="roleID" 			javaType="INTEGER" 	column="role_id" 				jdbcType="INTEGER"/>
+			</association>
+		</association>
+	</resultMap>
+
+
+	<!-- 全部字段 -->
+	<sql id="lookCarorder_all_field">
+		look_car_id,item_id,user_id,phone_num,state,look_car_date,create_date
+	</sql>
+
+	<!-- 插入 -->
+	<sql id="lookCarorder_add_field">
+		item_id,user_id,phone_num,look_car_date,create_date
+	</sql>
+
+	<select id="getLookCarOrderPage" resultMap="lookCarOrder">
+						SELECT
+			lookCar.look_car_id,
+			item.item_name,
+			item.item_code,
+			item.item_color,
+			item.item_model,
+			item.item_price,
+			class.item_classification_name,
+			users.user_name,
+			constant.value as stateName,
+			lookCar.phone_num,
+			FROM_UNIXTIME(lookCar.look_car_date,'%Y-%m-%d') as look_car_date
+		FROM
+			t_look_car lookCar
+		LEFT JOIN t_user users ON lookCar.user_id = users.user_id
+		LEFT JOIN t_item item ON lookCar.item_id = item.item_id
+		LEFT JOIN t_item_classification class ON item.item_classification_id = class.item_classification_id
+		LEFT JOIN t_constant constant ON lookCar.state=constant.name_id	
+		where constant.name='lookCarState'
+		   <if test="customerName!=null">
+           <bind name="customerNameBind" value="'%'customerName+'%'"/>
+          	and users.user_name LIKE #{customerNameBind}
+          </if>
+          <if test="phoneNum!=null">
+           <bind name="phoneNumBind" value="'%'phoneNum +'%'"/>
+          	and lookCar.phone_num LIKE #{phoneNumBind}
+          </if>
+		   <if test="startTime!=null">
+		    and lookCar.create_date >= UNIX_TIMESTAMP(#{startTime})
+          </if>
+          <if test="endTime!=null">
+		    and <![CDATA[lookCar.create_date <= UNIX_TIMESTAMP(#{endTime})]]>
+          </if>
+		   <if test="itemClassificationID !=0">
+		     and item.item_classification_id =#{itemClassificationID}
+		   </if>
+		   <if test="state !=0">
+		     and lookCar.state =#{state}
+		   </if>
+	</select>
+	
+	<select id="getLookCarOrderByCustomerName" resultMap="lookCarOrder">
+						SELECT
+			lookCar.look_car_id,
+			item.item_name,
+			item.item_code,
+			item.item_color,
+			item.item_model,
+			item.item_price,
+			class.item_classification_name,
+			users.user_name,
+			constant.value as stateName,
+			lookCar.phone_num,
+			FROM_UNIXTIME(lookCar.look_car_date,'%Y-%m-%d') as look_car_date
+		FROM
+			t_look_car lookCar
+		LEFT JOIN t_user users ON lookCar.user_id = users.user_id
+		LEFT JOIN t_item item ON lookCar.item_id = item.item_id
+		LEFT JOIN t_item_classification class ON item.item_classification_id = class.item_classification_id
+		LEFT JOIN t_constant constant ON lookCar.state=constant.name_id	
+		where constant.name='lookCarState'
+		   <if test="customerName!=null">
+           
+          	and users.user_name=#{customerName}
+          </if>
+    </select>
+	<update id="updateLookCarOrderState">
+		update t_look_car set state=#{state} where look_car_id=#{lookCarID}
+	</update>
+	
+	
+	
+	<delete id="deleteLookCarOrder">
+	delete from t_look_car where look_car_id in 
+	<foreach collection="list" item="lookCarID" open="(" close=")" separator=",">
+			#{lookCarID}
+		</foreach>
+	</delete>
+	<insert id="addLookCarOrder">
+		insert into t_look_car (<include refid="lookCarorder_add_field"></include>) values (#{itemID},#{customerID},#{phoneNum},UNIX_TIMESTAMP(now()),UNIX_TIMESTAMP(now()))
+	</insert>
+	<select id="lookCarOrderCount" resultType="java.lang.Integer">
+		SELECT count(look_car_id) lookCarOrderCount from t_look_car
+	</select>
+	<select id="getItemLookCarOrderByLookCarID" resultMap="lookCarOrder">
+		select look_car_id,item_id,user_name,phone_num from t_look_car lookCar
+		LEFT JOIN t_user users ON lookCar.user_id = users.user_id where look_car_id=#{lookCarID}
+	</select>
+</mapper>

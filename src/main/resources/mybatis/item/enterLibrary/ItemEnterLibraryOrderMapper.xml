@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.car.manage.mapper.item.enterLibrary.ItemEnterLibraryOrderMapper">
+
+	<resultMap type="cn.car.manage.beans.orm.item.enterLibrary.ItemEnterLibrary" id="itemEnterLibrary">
+		<id property="enterLibraryID" javaType="int" column="enter_library_id" jdbcType="INTEGER" />
+		<result property="warehouseID" javaType="int" column="warehouse_id"
+			jdbcType="INTEGER" />
+		<result property="itemID" javaType="long" column="item_id"
+			jdbcType="BIGINT" />
+		<result property="enterLibraryReason" javaType="String" column="enter_library_reason"
+			jdbcType="VARCHAR" />
+		<result property="enterLibraryCode" javaType="String" column="enter_library_code"
+			jdbcType="VARCHAR" />
+		<result property="enterLibraryNum" javaType="int" column="enter_library_num"
+			jdbcType="INTEGER" />
+		<result property="enterLibraryDate" javaType="String" column="enter_library_date"
+			jdbcType="VARCHAR" />
+		<result property="createPerson" javaType="String" column="create_person"
+			jdbcType="VARCHAR" />
+		<association property="item" javaType="cn.car.manage.beans.orm.item.Item">
+			<id property="itemID" javaType="long" column="item_id" jdbcType="BIGINT" />
+		<result property="itemClassificationID" javaType="int"
+			column="item_classification_id" jdbcType="INTEGER" />
+		<result property="itemShelfTime" javaType="int" column="item_shelf_time"
+			jdbcType="INTEGER" />
+		<result property="itemDownTime" javaType="int" column="item_down_time"
+			jdbcType="INTEGER" />
+		<result property="itemHot" javaType="String" column="item_hot"
+			jdbcType="VARCHAR" />
+		<result property="itemName" javaType="String" column="item_name"
+			jdbcType="VARCHAR" />
+		<result property="itemPrice" javaType="double" column="item_price"
+			jdbcType="DOUBLE" />
+		<result property="itemColor" javaType="String" column="item_color"
+			jdbcType="VARCHAR" />
+		<result property="itemCode" javaType="String" column="item_code"
+			jdbcType="VARCHAR" />
+		<result property="itemState" javaType="String" column="item_state"
+			jdbcType="VARCHAR" />
+			<result property="itemModel" javaType="String" column="item_model"
+			jdbcType="VARCHAR" />
+		<association property="itemClass" javaType="cn.car.manage.beans.orm.item.classification.ItemClassification">
+			<id property="itemClassificationID" javaType="int" column="item_classification_id" jdbcType="INTEGER" />
+			<result property="itemClassificationName" javaType="String" column="item_classification_name"
+			jdbcType="VARCHAR" />
+		</association>
+		</association>
+		<association property="wareHouse" javaType="cn.car.manage.beans.orm.item.wareHouse.WareHouse">
+			<id property="wareHouseID" javaType="int" column="warehouse_id"
+			jdbcType="INTEGER" />
+			<result property="wareHouseName" javaType="String" column="warehouse_name"
+			jdbcType="VARCHAR" />
+			<result property="wareHouseKeeper" javaType="String" column="wareHouse_keeper"
+			jdbcType="VARCHAR" />
+		</association>	
+	</resultMap>
+	<resultMap type="cn.car.manage.beans.orm.item.enterLibrary.ItemEnterLibrary" id="enterLibrary">
+		<id property="enterLibraryID" javaType="int" column="enter_library_id" jdbcType="INTEGER" />
+		
+		<result property="itemCode" javaType="String" column="item_code"
+			jdbcType="VARCHAR" />	
+		<result property="enterLibraryReason" javaType="String" column="enter_library_reason"
+			jdbcType="VARCHAR" />
+		<result property="enterLibraryCode" javaType="String" column="enter_library_code"
+			jdbcType="VARCHAR" />
+		<result property="enterLibraryNum" javaType="int" column="enter_library_num"
+			jdbcType="INTEGER" />
+			<result property="itemStockNum" javaType="int" column="item_stock_num"
+			jdbcType="INTEGER" />
+		<result property="createPerson" javaType="String" column="create_person"
+			jdbcType="VARCHAR" />
+		<result property="itemID" javaType="long" column="item_id" jdbcType="BIGINT" />
+		<association property="item" javaType="cn.car.manage.beans.orm.item.Item">
+			<id property="itemID" javaType="long" column="item_id" jdbcType="BIGINT" />
+		<result property="itemClassificationID" javaType="int"
+			column="item_classification_id" jdbcType="INTEGER" />
+		<result property="itemShelfTime" javaType="int" column="item_shelf_time"
+			jdbcType="INTEGER" />
+		<result property="itemDownTime" javaType="int" column="item_down_time"
+			jdbcType="INTEGER" />
+		<result property="itemHot" javaType="String" column="item_hot"
+			jdbcType="VARCHAR" />
+		<result property="itemName" javaType="String" column="item_name"
+			jdbcType="VARCHAR" />
+		<result property="itemPrice" javaType="double" column="item_price"
+			jdbcType="DOUBLE" />
+		<result property="itemColor" javaType="String" column="item_color"
+			jdbcType="VARCHAR" />
+		<result property="itemCode" javaType="String" column="item_code"
+			jdbcType="VARCHAR" />
+		<result property="itemState" javaType="String" column="item_state"
+			jdbcType="VARCHAR" />
+			<result property="itemModel" javaType="String" column="item_model"
+			jdbcType="VARCHAR" />
+		<association property="itemClass" javaType="cn.car.manage.beans.orm.item.classification.ItemClassification">
+			<id property="itemClassificationID" javaType="int" column="item_classification_id" jdbcType="INTEGER" />
+			<result property="itemClassificationName" javaType="String" column="item_classification_name"
+			jdbcType="VARCHAR" />
+		</association>
+		</association>
+		</resultMap>
+	
+	<!-- 用户全部字段 -->
+	<sql id="get_all_field">
+		enterLibrary.enter_library_id,enterLibrary.enter_library_code,enterLibrary.enter_library_reason,enterLibrary.enter_library_num,FROM_UNIXTIME(enterLibrary.enter_library_date,'%Y-%m-%d') as enter_library_date,
+		enterLibrary.create_person,item.item_name,item.item_code,item.item_color,item.item_model,wareHouse.warehouse_name,class.item_classification_name
+	</sql>
+
+	<!-- 插入 -->
+	<sql id="item_add_field">
+		item_id,warehouse_id,enter_library_reason,enter_library_code,enter_library_num,enter_library_date,create_person
+	</sql>
+	
+	<!-- 分页 -->
+	<select id="getEnterLibraryOrderPage" resultMap="itemEnterLibrary">
+						SELECT
+			enterLibrary.enter_library_id,enterLibrary.enter_library_code,enterLibrary.enter_library_reason,enterLibrary.enter_library_num,FROM_UNIXTIME(enterLibrary.enter_library_date,'%Y-%m-%d') as enter_library_date,
+		enterLibrary.create_person,item.item_name,item.item_price,item.item_code,item.item_color,item.item_model,wareHouse.warehouse_name,class.item_classification_name
+		FROM
+			t_item_enter_library enterLibrary
+		LEFT JOIN t_item item ON enterLibrary.item_id = item.item_id
+		
+		LEFT JOIN t_item_classification class
+		ON item.item_classification_id=class.item_classification_id
+		LEFT JOIN t_warehouse warehouse ON enterLibrary.warehouse_id = warehouse.warehouse_id
+		<where>
+		   <if test="enterLibraryCode!=null">
+           <bind name="enterLibraryCodeBind" value="'%'+enterLibraryCode + '%'"/>
+          	and enterLibrary.enter_library_code LIKE #{enterLibraryCode}
+          </if>
+		   <if test="startTime!=null">
+		    and enterLibrary.enter_library_date >= UNIX_TIMESTAMP(#{startTime})
+          </if>
+          <if test="endTime!=null">
+		    and <![CDATA[enterLibrary.enter_library_date <= UNIX_TIMESTAMP(#{endTime})]]>
+          </if>
+		   <if test="itemClassificationID !=0">
+		     and item.item_classification_id =#{itemClassificationID}
+		   </if>
+	 	</where>
+	</select>
+	<insert id="addEnterLibraryOrder">
+		INSERT INTO t_item_enter_library (item_id,warehouse_id,enter_library_code,enter_library_num,enter_library_date,create_person) VALUES (#{itemID},#{wareHouseID},#{enterLibraryCode},#{enterLibraryNum},UNIX_TIMESTAMP(now()),#{createPerson})
+	</insert>
+	
+	<select id="getEnterLibrarOrderByEnterLibaryID" resultMap="enterLibrary">
+		select enterLibrary.enter_library_id,item.item_id,item.item_code,enterLibrary.enter_library_code,enterLibrary.enter_library_num,enterLibrary.create_person
+		,item.item_price from 
+		t_item_enter_library enterLibrary
+		LEFT JOIN t_item item
+		ON enterLibrary.item_id=item.item_id
+		where enterLibrary.enter_library_id=#{enterLibraryID}
+	</select>
+	
+	<update id="updateItemEnterLibraryOrder">
+		update t_item_enter_library set item_id=#{itemID},enter_library_num=#{enterLibraryNum},create_person=#{createPerson},enter_library_date=UNIX_TIMESTAMP(now())
+		where enter_library_id=#{enterLibraryID}
+	</update>
+	
+	
+	<delete id="deleteEnterLibraryOrder">
+		DELETE FROM t_item_enter_library where enter_library_id in 
+		<foreach collection="list" item="enterLibraryID" open="(" close=")" separator=",">
+			#{enterLibraryID}
+		</foreach>
+	</delete>
+</mapper>

@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.car.manage.mapper.item.order.ItemOrderMapper">
+
+	<resultMap type="cn.car.manage.beans.orm.item.order.ItemOrder"
+		id="itemOrder">
+		<id property="itemOrderID" javaType="int" column="item_order_id"
+			jdbcType="INTEGER" />
+		<result property="itemLookID" javaType="int" column="item_look_id"
+			jdbcType="INTEGER" />
+		<result property="itemID" javaType="long" column="item_id"
+			jdbcType="BIGINT" />
+		<result property="customerID" javaType="int" column="user_id"
+			jdbcType="INTEGER" />
+		<result property="itemOrderCode" javaType="String" column="order_code"
+			jdbcType="VARCHAR" />
+		<result property="orderState" javaType="String" column="order_state"
+			jdbcType="VARCHAR" />
+		<result property="payMethod" javaType="int" column="pay_method"
+			jdbcType="INTEGER" />
+		<result property="itemNum" javaType="int" column="item_num"
+			jdbcType="INTEGER" />
+		<result property="totalPrice" javaType="double" column="total_price"
+			jdbcType="DOUBLE" />
+		<result property="createDate" javaType="String" column="create_date"
+			jdbcType="VARCHAR" />
+		<result property="payDate" javaType="String" column="pay_date"
+			jdbcType="VARCHAR" />
+		<result property="deliveryDate" javaType="String" column="delivery_date"
+			jdbcType="VARCHAR" />
+		<result property="completeDate" javaType="String" column="complete_date"
+			jdbcType="VARCHAR" />
+		<result property="closeDate" javaType="String" column="close_date"
+			jdbcType="VARCHAR" />
+		<result property="address" javaType="String" column="address"
+			jdbcType="VARCHAR" />
+		<result property="customerName" javaType="String" column="customer_name"
+			jdbcType="VARCHAR" />
+		<result property="phone" javaType="String" column="phone"
+			jdbcType="VARCHAR" />
+		<association property="item" javaType="cn.car.manage.beans.orm.item.Item">
+		<id property="itemID" javaType="long" column="item_id" jdbcType="BIGINT" />
+		<result property="itemClassificationID" javaType="int"
+			column="item_classification_id" jdbcType="INTEGER" />
+		<result property="itemShelfTime" javaType="String" column="item_shelf_time"
+			jdbcType="VARCHAR" />
+		<result property="itemDownTime" javaType="String" column="item_down_time"
+			jdbcType="VARCHAR" />
+		<result property="itemHot" javaType="String" column="item_hot"
+			jdbcType="VARCHAR" />
+		<result property="itemName" javaType="String" column="item_name"
+			jdbcType="VARCHAR" />
+		<result property="itemPrice" javaType="double" column="item_price"
+			jdbcType="DOUBLE" />
+		<result property="itemColor" javaType="String" column="item_color"
+			jdbcType="VARCHAR" />
+		<result property="itemCode" javaType="String" column="item_code"
+			jdbcType="VARCHAR" />
+		<result property="itemState" javaType="String" column="item_state"
+			jdbcType="VARCHAR" />
+		<result property="itemModel" javaType="String" column="item_model"
+			jdbcType="VARCHAR" />
+		<result property="itemStockNum" javaType="int" column="item_stock_num"
+			jdbcType="INTEGER" />
+			<result property="wareHouseID" javaType="int" column="warehouse_id"
+			jdbcType="INTEGER" />
+		<association property="itemClass" javaType="cn.car.manage.beans.orm.item.classification.ItemClassification">
+			<id property="itemClassificationID" javaType="long" column="item_classification_id" jdbcType="INTEGER" />
+			<result property="itemClassificationName" javaType="String" column="item_classification_name"
+			jdbcType="VARCHAR" />
+		</association>
+		</association>
+		<association property="customer" javaType="cn.car.manage.beans.orm.customer.Customer">
+			<id property="userID" 					javaType="INTEGER"  column="user_id" 						jdbcType="INTEGER"/>
+	    	<result property="userName" 				javaType="String" 	column="user_name" 						jdbcType="VARCHAR"/>
+	    	<result property="userPassWord" 			javaType="String" 	column="user_password" 					jdbcType="VARCHAR"/>
+	    	<result property="userShowName" 				javaType="String" 	column="user_show_name" 			jdbcType="VARCHAR"/>
+	    	<result property="userPhone" 			    javaType="String" 	column="user_phone" 					jdbcType="VARCHAR"/>
+	  		<result property="userJoinDate" 			javaType="String" 	column="user_join_date" 				jdbcType="VARCHAR"/>
+	  		<result property="state" 			        javaType="INTEGER" 	column="state" 				jdbcType="INTEGER"/>	
+			<association property="userRole"	javaType="cn.car.manage.beans.orm.system.UserRole">
+			<result property="userID" 					    javaType="INTEGER" 		column="user_id" jdbcType="INTEGER"/>
+	  		<result property="roleID" 			javaType="INTEGER" 	column="role_id" 				jdbcType="INTEGER"/>
+			</association>
+		</association>
+	</resultMap>
+
+
+	<!-- 全部字段 -->
+	<sql id="order_all_field">
+		item_order_id,item_look_id,item_id,user_id,order_state,pay_method,total_price,
+		create_date,pay_date,delivery_date,complete_date,close_date
+	</sql>
+
+	<!-- 插入 -->
+	<sql id="order_add_field">
+		item_id,user_id,customer_name,phone,pay_method,total_price,create_date,order_code,address,item_look_id
+	</sql>
+
+	<sql id="only_order">
+		item_order_id,order_state,address,total_Price,pay_method
+	</sql>
+	<select id="getItemOrderPage" resultMap="itemOrder">
+						SELECT
+			item.item_name,
+			item.item_code,
+			item.item_color,
+			item.item_model,
+			class.item_classification_name,
+			orderDetailed.item_num as item_num,
+			users.user_name,
+			constant.value as order_state,
+			itemOrder.address,
+			itemOrder.item_order_id,
+			itemOrder.order_code,
+			itemOrder.pay_method,
+			itemOrder.total_price,
+			FROM_UNIXTIME(itemOrder.create_date,'%Y-%m-%d') as create_date,
+			FROM_UNIXTIME(itemOrder.pay_date,'%Y-%m-%d') as pay_date,
+			FROM_UNIXTIME(itemOrder.delivery_date,'%Y-%m-%d') as delivery_date,
+			FROM_UNIXTIME(itemOrder.complete_date,'%Y-%m-%d') as complete_date,
+			FROM_UNIXTIME(itemOrder.close_date,'%Y-%m-%d') as close_date
+		FROM
+			t_item_order itemOrder
+		LEFT JOIN t_order_detailed orderDetailed ON itemOrder.item_order_id = orderDetailed.order_id
+		LEFT JOIN t_user users ON itemOrder.user_id = users.user_id
+		LEFT JOIN t_item item ON itemOrder.item_id = item.item_id
+		LEFT JOIN t_item_classification class ON item.item_classification_id = class.item_classification_id
+		LEFT JOIN t_constant constant ON itemOrder.order_state=constant.name_id	
+		where constant.name='orderState'
+		   <if test="itemOrderCode!=null">
+           <bind name="itemOrderCodeBind" value="'%'itemOrderCode + '%'"/>
+          	and itemOrder.order_code LIKE #{itemOrderCodeBind}
+          </if>
+		   <if test="startTime!=null">
+		    and itemOrder.create_date >= UNIX_TIMESTAMP(#{startTime})
+          </if>
+          <if test="endTime!=null">
+		    and <![CDATA[itemOrder.create_date <= UNIX_TIMESTAMP(#{endTime})]]>
+          </if>
+		   <if test="itemClassificationID !=0">
+		     and item.item_classification_id =#{itemClassificationID}
+		   </if>
+	</select>
+	<select id="getItemOrderByCustomerName" resultMap="itemOrder">
+						SELECT
+			item.item_name,
+			item.item_code,
+			item.item_color,
+			item.item_model,
+			class.item_classification_name,
+			orderDetailed.item_num,
+			users.user_name,
+			constant.value as order_state,
+			itemOrder.address,
+			itemOrder.item_order_id,
+			itemOrder.order_code,
+			itemOrder.pay_method,
+			itemOrder.total_price,
+			FROM_UNIXTIME(itemOrder.create_date,'%Y-%m-%d') as create_date,
+			FROM_UNIXTIME(itemOrder.pay_date,'%Y-%m-%d') as pay_date,
+			FROM_UNIXTIME(itemOrder.delivery_date,'%Y-%m-%d') as delivery_date,
+			FROM_UNIXTIME(itemOrder.complete_date,'%Y-%m-%d') as complete_date,
+			FROM_UNIXTIME(itemOrder.close_date,'%Y-%m-%d') as close_date
+		FROM
+			t_item_order itemOrder
+		LEFT JOIN t_order_detailed orderDetailed ON itemOrder.item_order_id = orderDetailed.order_id
+		LEFT JOIN t_user users ON itemOrder.user_id = users.user_id
+		LEFT JOIN t_item item ON itemOrder.item_id = item.item_id
+		LEFT JOIN t_item_classification class ON item.item_classification_id = class.item_classification_id
+		LEFT JOIN t_constant constant ON itemOrder.order_state=constant.name_id	
+		where constant.name='orderState'
+		   <if test="customerName!=null">
+           
+          	and users.user_name = #{customerName}
+          </if>
+		  
+	</select>
+	<select id="getItemOrderByLookCarID" resultMap="itemOrder">
+		SELECT item_order_id from t_item_order where item_look_id=#{lookCarID}
+			
+	</select>
+	<select id="getItemOrderByItemOrderID" resultMap="itemOrder">
+		SELECT
+			
+			item.item_name,
+			item.item_code,
+			item.item_color,
+			orderDetailed.item_num,
+			users.user_name,
+			itemOrder.address,
+			itemOrder.item_order_id,
+			itemOrder.order_code,
+			itemOrder.pay_method,
+			itemOrder.total_price,
+			itemOrder.order_state
+		FROM
+			t_item_order itemOrder
+		LEFT JOIN t_order_detailed orderDetailed ON itemOrder.item_order_id = orderDetailed.order_id
+		LEFT JOIN t_user users ON itemOrder.user_id = users.user_id
+		LEFT JOIN t_item item ON itemOrder.item_id = item.item_id
+		LEFT JOIN t_constant constant ON itemOrder.order_state=constant.name_id		
+		where itemOrder.item_order_id=#{itemOrderID} and  constant.name='orderState'
+	</select>
+	
+	<update id="updateItemOrderState">
+		update t_item_order set order_state=#{itemOrderState} where item_order_id=#{itemOrderID}
+	</update>
+	<update id="updateItemOrderStateByLookCarID">
+		update t_item_order set order_state=#{itemOrderState} where item_look_id=#{lookCarID}
+	</update>
+	<update id="updateItemOrder">
+		update t_item_order set total_price=#{totalPrice},pay_method=#{payMethod},address=#{address} where item_order_id=#{itemOrderID}
+	</update>
+	
+	<delete id="deleteItemOrder">
+	delete from t_item_order where item_order_id in 
+	<foreach collection="list" item="itemOrderID" open="(" close=")" separator=",">
+			#{itemOrderID}
+	</foreach>
+	</delete>
+	<insert id="addItemOrder" useGeneratedKeys="true" keyProperty="itemOrderID">
+		insert into t_item_order (<include refid="order_add_field"></include>) values (#{itemID},#{customerID},#{customerName},#{phone},#{payMethod},#{totalPrice},UNIX_TIMESTAMP(now()),#{itemOrderCode},#{address},#{lookCarID})
+	</insert>
+	<select id="getItemOrderCount" resultType="java.lang.Integer">
+	select count(*) from t_item_order 
+	</select>
+	
+	<select id="getHaveInHandOrderCount" resultType="map">
+				SELECT
+			d.orderState AS haveInHandOrder,
+			IFNULL(SUM(d.count),0) AS haveInHandOrderCount
+		FROM
+			(
+				SELECT
+					IFNULL(
+						count(orders.order_state),
+						0
+					) AS count,
+					t.`value` AS orderState,
+					t.name_id AS name_id
+				FROM
+					t_item_order orders
+				RIGHT JOIN t_constant t ON orders.order_state = t.name_id
+				WHERE
+					t.`name` = 'OrderState'
+				GROUP BY
+		
+				VALUE
+		
+			) AS d
+		WHERE
+			d.name_id IN (1, 3, 6)
+	</select>
+	<select id="getSuccessOrderCount" resultType="map">
+				SELECT
+			d.orderState AS successOrder,
+			IFNULL(SUM(d.count),0) AS successOrderCount
+		FROM
+			(
+				SELECT
+					IFNULL(
+						count(orders.order_state),
+						0
+					) AS count,
+					t.`value` AS orderState,
+					t.name_id AS name_id
+				FROM
+					t_item_order orders
+				RIGHT JOIN t_constant t ON orders.order_state = t.name_id
+				WHERE
+					t.`name` = 'OrderState'
+				GROUP BY
+		
+				VALUE
+		
+			) AS d
+		WHERE
+			d.name_id IN (2, 4, 10)
+	</select>
+	<select id="getFailOrderCount" resultType="map">
+				SELECT
+			d.orderState AS failOrder,
+			IFNULL(SUM(d.count),0) AS failOrderCount
+		FROM
+			(
+				SELECT
+					IFNULL(
+						count(orders.order_state),
+						0
+					) AS count,
+					t.`value` AS orderState,
+					t.name_id AS name_id
+				FROM
+					t_item_order orders
+				RIGHT JOIN t_constant t ON orders.order_state = t.name_id
+				WHERE
+					t.`name` = 'OrderState'
+				GROUP BY
+		
+				VALUE
+		
+			) AS d
+		WHERE
+			d.name_id IN (7, 8, 9)
+	</select>
+	<select id="getCustomerSavenDaySuccess">
+		SELECT
+	
+	IFNULL(SUM(d.count), 0) AS successOrderCount,
+	d.time AS time
+FROM
+	(
+		SELECT
+			IFNULL(
+				count(orders.order_state),
+				0
+			) AS count,
+			t.`value` AS orderState,
+			FROM_UNIXTIME(orders.create_date, '%m-%d') AS time
+		FROM
+			t_item_order orders
+		RIGHT JOIN t_constant t ON orders.order_state = t.name_id
+		WHERE
+			t.`name` = 'OrderState'
+		AND orders.create_date >= UNIX_TIMESTAMP(
+			DATE_SUB(
+				DATE_FORMAT(now(), '%Y-%m-%d'),
+				INTERVAL 7 DAY
+			)
+		)
+		AND t.name_id IN (2,4,10)
+		GROUP BY
+
+		VALUE
+			,
+			FROM_UNIXTIME(
+				orders.create_date,
+				'%Y-%m-%d'
+			)
+	) AS d
+	</select>
+	<select id="getCustomerSavenDayHaveInHand">
+		SELECT
+	
+	IFNULL(SUM(d.count), 0) AS successOrderCount,
+	d.time AS time
+FROM
+	(
+		SELECT
+			IFNULL(
+				count(orders.order_state),
+				0
+			) AS count,
+			t.`value` AS orderState,
+			FROM_UNIXTIME(orders.create_date, '%m-%d') AS time
+		FROM
+			t_item_order orders
+		RIGHT JOIN t_constant t ON orders.order_state = t.name_id
+		WHERE
+			t.`name` = 'OrderState'
+		AND orders.create_date >= UNIX_TIMESTAMP(
+			DATE_SUB(
+				DATE_FORMAT(now(), '%Y-%m-%d'),
+				INTERVAL 7 DAY
+			)
+		)
+		AND t.name_id IN (1, 3, 6)
+		GROUP BY
+
+		VALUE
+			,
+			FROM_UNIXTIME(
+				orders.create_date,
+				'%Y-%m-%d'
+			)
+	) AS d
+	</select>
+	<select id="getCustomerSavenDayFail">
+		SELECT
+	
+	IFNULL(SUM(d.count), 0) AS successOrderCount,
+	d.time AS time
+FROM
+	(
+		SELECT
+			IFNULL(
+				count(orders.order_state),
+				0
+			) AS count,
+			t.`value` AS orderState,
+			FROM_UNIXTIME(orders.create_date, '%m-%d') AS time
+		FROM
+			t_item_order orders
+		RIGHT JOIN t_constant t ON orders.order_state = t.name_id
+		WHERE
+			t.`name` = 'OrderState'
+		AND orders.create_date >= UNIX_TIMESTAMP(
+			DATE_SUB(
+				DATE_FORMAT(now(), '%Y-%m-%d'),
+				INTERVAL 7 DAY
+			)
+		)
+		AND t.name_id IN (7,8,9)
+		GROUP BY
+
+		VALUE
+			,
+			FROM_UNIXTIME(
+				orders.create_date,
+				'%Y-%m-%d'
+			)
+	) AS d
+	</select>
+</mapper>

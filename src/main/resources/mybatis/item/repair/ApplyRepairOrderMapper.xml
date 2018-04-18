@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.car.manage.mapper.item.repair.ItemApplyRepairMapper">
+
+	<resultMap type="cn.car.manage.beans.orm.item.repair.ApplyRepair"
+		id="applyRepair">
+		<id property="repairsID" javaType="int" column="repair_id"
+			jdbcType="INTEGER" />
+		<result property="itemModelNum" javaType="String" column="item_model_num"
+			jdbcType="VARCHAR" />
+		<result property="customerName" javaType="String" column="customer_name"
+			jdbcType="VARCHAR" />
+		<result property="itemCode" javaType="String" column="item_code"
+			jdbcType="VARCHAR" />
+		<result property="repairDate" javaType="int" column="repair_date"
+			jdbcType="INTEGER" />
+		<result property="repairPosition" javaType="String" column="repair_position"
+			jdbcType="VARCHAR" />
+		<result property="damagedReason" javaType="String" column="damaged_reason"
+			jdbcType="VARCHAR" />
+		<result property="applyState" javaType="int" column="apply_state"
+			jdbcType="INTEGER" />
+		<result property="createDate" javaType="int" column="create_date"
+			jdbcType="INTEGER" />
+
+	</resultMap>
+
+
+	<!-- 全部字段 -->
+	<sql id="applyRepair_all_field">
+		repair_id,item_model_num,customer_name,item_code,repair_date,repair_position,damaged_reason,
+		apply_state,create_date
+	</sql>
+
+	<!-- 插入 -->
+	<sql id="applyRepair_add_field">
+		item_model_num,customer_name,item_code,repair_date,repair_position,damaged_reason,
+		apply_state,create_date
+	</sql>
+
+
+</mapper>

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.car.manage.mapper.item.stock.ItemStockMapper">
+
+	<resultMap type="cn.car.manage.beans.orm.item.stock.ItemStock" id="itemStock">
+		<id property="itemStockID" javaType="int" column="item_stock_id"
+			jdbcType="INTEGER" />
+		<result property="wareHouseID" javaType="int" column="warehouse_id"
+			jdbcType="INTEGER" />
+		<result property="itemStockNum" javaType="int" column="item_stock_num"
+			jdbcType="INTEGER" />
+		<result property="itemEnterNum" javaType="int" column="item_enter_library_num"
+			jdbcType="INTEGER" />
+		<result property="itemOutNum" javaType="int" column="item_out_library_num"
+			jdbcType="INTEGER" />
+		<result property="itemID" javaType="long" column="item_id"
+			jdbcType="BIGINT" />
+		<association property="item" javaType="cn.car.manage.beans.orm.item.Item">
+			<id property="itemID" javaType="long" column="item_id" jdbcType="BIGINT" />
+		<result property="itemClassificationID" javaType="int"
+			column="item_classification_id" jdbcType="INTEGER" />
+		<result property="itemShelfTime" javaType="int" column="item_shelf_time"
+			jdbcType="INTEGER" />
+		<result property="itemDownTime" javaType="int" column="user_join_date"
+			jdbcType="INTEGER" />
+		<result property="itemHot" javaType="String" column="item_hot"
+			jdbcType="VARCHAR" />
+		<result property="itemName" javaType="String" column="item_name"
+			jdbcType="VARCHAR" />
+		<result property="itemPrice" javaType="double" column="item_price"
+			jdbcType="DOUBLE" />
+		<result property="itemColor" javaType="String" column="item_color"
+			jdbcType="VARCHAR" />
+		<result property="itemCode" javaType="String" column="item_code"
+			jdbcType="VARCHAR" />
+		<result property="itemState" javaType="String" column="item_state"
+			jdbcType="VARCHAR" />
+			<result property="itemModel" javaType="String" column="item_model"
+			jdbcType="VARCHAR" />
+		<association property="itemClass" javaType="cn.car.manage.beans.orm.item.classification.ItemClassification">
+			<id property="itemClassificationID" javaType="long" column="item_classification_id" jdbcType="INTEGER" />
+			<result property="itemClassificationName" javaType="String" column="item_classification_name"
+			jdbcType="VARCHAR" />
+		</association>
+		</association>
+		<association property="wareHouse" javaType="cn.car.manage.beans.orm.item.wareHouse.WareHouse">
+			<id property="wareHouseID" javaType="int" column="warehouse_id"
+			jdbcType="INTEGER" />
+			<result property="wareHouseName" javaType="String" column="warehouse_name"
+			jdbcType="VARCHAR" />
+			<result property="wareHouseKeeper" javaType="String" column="wareHouse_keeper"
+			jdbcType="VARCHAR" />
+		</association>
+	</resultMap>
+
+
+	<!-- 全部字段 -->
+	<sql id="itemStock_all_field">
+		item_stock_id,warehouse_id,item_stock_num,item_enter_library_num,item_out_library_num,item_id
+	</sql>
+
+	<!-- 插入 -->
+	<sql id="itemStock_add_field">
+		warehouse_id,item_stock_num,item_enter_library_num,item_out_library_num,item_id
+	</sql>
+
+	<!-- 分页 -->
+	<select id="getVehicleItemStockByItemCodeOrItemNameOrWareHouseName" resultMap="itemStock">
+						SELECT
+			item.item_code,
+			item.item_name,
+			item.item_color,
+			class.item_classification_name,
+			stock.item_stock_num,
+			stock.item_enter_library_num,
+			stock.item_out_library_num,
+			warehouse.warehouse_name
+		FROM
+			t_item_stock stock
+		LEFT JOIN t_item item ON stock.item_id = item.item_id
+		LEFT JOIN t_item_classification class
+		ON item.item_classification_id=class.item_classification_id
+		LEFT JOIN t_warehouse warehouse ON stock.warehouse_id = warehouse.warehouse_id
+		where 1=1
+          <choose>
+          <when test="itemCode!=null">
+           <bind name="itemCodeBind" value="'%'+itemCode + '%'"/>
+          and item_code LIKE #{itemCode} and class.item_classification_id=1
+          </when>
+          <when test="itemName!=null">
+          <bind name="itemNameBind" value="'%'+itemName + '%'"/>
+		    and item.item_name LIKE #{itemNameBind} and class.item_classification_id=1 
+          </when>
+          <when test="wareHouseID!=-1">
+          and item_code=#{itemCode} and class.item_classification_id=1
+          </when>
+          <otherwise>
+          and class.item_classification_id=1 
+          </otherwise>
+          </choose>
+	</select>
+	
+	<select id="getFittingItemStockByItemCodeOrItemNameOrWareHouseName" resultMap="itemStock">
+						SELECT
+			item.item_code,
+			item.item_name,
+			item.item_color,
+			class.item_classification_name,
+			stock.item_stock_num,
+			stock.item_enter_library_num,
+			stock.item_out_library_num,
+			warehouse.warehouse_name
+		FROM
+			t_item_stock stock
+		LEFT JOIN t_item item ON stock.item_id = item.item_id
+		LEFT JOIN t_item_classification class
+		ON item.item_classification_id=class.item_classification_id
+		LEFT JOIN t_warehouse warehouse ON stock.warehouse_id = warehouse.warehouse_id
+		where 1=1
+          <choose>
+          <when test="itemCode!=null">
+           <bind name="itemCodeBind" value="'%'+itemCode + '%'"/>
+          and item_code LIKE #{itemCode} and class.item_classification_id=2
+          </when>
+          <when test="itemName!=null">
+          <bind name="itemNameBind" value="'%'+itemName + '%'"/>
+		  and item.item_name LIKE #{itemNameBind} and class.item_classification_id=2
+          </when>
+          <when test="wareHouseID!=-1">
+          and warehouse.warehouse_id=#{wareHouseID} and class.item_classification_id=2
+          </when>
+          <otherwise>
+          and class.item_classification_id=2
+          </otherwise>
+          </choose>
+	</select>
+	<update id="updateItemStockNumByItemIDIsOutLibrary">
+		update t_item_stock set item_stock_num=item_stock_num-#{itemNum},item_out_library_num=item_out_library_num+#{itemNum}
+		where item_id=#{itemID}
+	</update>
+	<update id="updateItemStockNumByItemIDIsEnterLibrary">
+		update t_item_stock set item_stock_num=item_stock_num+#{itemNum},item_enter_library_num=item_enter_library_num+#{itemNum}
+		where item_id=#{itemID}
+	</update>
+	<select id="getItemByItemID" resultMap="itemStock">
+		select item_id,warehouse_id,item_stock_num from t_item_stock where item_id=#{itemID}
+	</select>
+	<update id="revokeItemOutLibraryOrder">
+		update t_item_stock set item_stock_num=item_stock_num+#{oldOutLibraryNum},item_out_library_num=item_out_library_num-#{oldOutLibraryNum}
+		where item_id=#{oldItemID}
+	</update>
+	
+	<update id="revokeItemEnterLibraryOrder">
+		update t_item_stock set item_stock_num=item_stock_num-#{oldEnterLibraryNum},item_enter_library_num=item_enter_library_num-#{oldEnterLibraryNum}
+		where item_id=#{itemID}
+	</update>
+	<insert id="addItemStock">
+	insert into t_item_stock (warehouse_id,item_stock_num,item_enter_library_num,item_id) values (#{wareHouseID},#{itemStockNum},#{itemEnterNum},#{itemID})
+	</insert>
+	
+	<select id="getTotalStockNum" resultType="java.lang.Integer">
+		select IFNULL(sum(item_stock_num),0) as item_stock_num from t_item_stock
+	</select>
+	<select id="getItemEnterAndOutAndStock" resultType="map">
+		select wareHouse.warehouse_id, IFNULL(sum(stock.item_stock_num),0) as itemStockNum,IFNULL(sum(stock.item_enter_library_num),0) as itemEnterLibraryNum,
+		IFNULL(sum(stock.item_out_library_num),0) as itemOutLibraryNum,wareHouse.warehouse_name as wareHouseName
+		from t_item_stock stock
+		right JOIN t_warehouse wareHouse
+		on stock.warehouse_id=wareHouse.warehouse_id
+		group by wareHouse.warehouse_name
+		order by wareHouse.warehouse_id 
+	</select>
+</mapper>

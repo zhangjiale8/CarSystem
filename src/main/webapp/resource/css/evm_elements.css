@@ -1,0 +1,85 @@
+button, input, optgroup, select, textarea { margin: 0; color: inherit; }
+
+button { height: 30px; line-height: 30px; color: #595959; padding: 0px 17px 5px 18px; background: #DCDCDC; border: none; outline: 0; font-size: 12px; border-radius: 2px; }
+
+select { border: 1px solid #c4c4c4; background-color: #f0f0f0; color: #595959; padding-left: 5px; border-radius: 2px; box-sizing: border-box; width: 200px; height: 30px; font-size: 12px; outline: 0; }
+
+button, html input[type="button"], input[type="reset"], input[type="submit"] { -webkit-appearance: button; cursor: pointer; }
+
+button[disabled], html input[disabled] { cursor: default; }
+
+button::-moz-focus-inner, input::-moz-focus-inner { padding: 0; border: 0; }
+
+input { line-height: normal; }
+
+input[type="checkbox"], input[type="radio"] { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; padding: 0; }
+
+input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { height: auto; }
+
+input[type="search"] { -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; -webkit-appearance: textfield; }
+
+input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; }
+
+fieldset { padding: .35em .625em .75em; margin: 0 2px; border: 1px solid #c0c0c0; }
+
+ul { -webkit-margin-start: 0; -webkit-padding-start: 0; margin: 0; padding: 0; }
+
+legend { padding: 0; border: 0; }
+
+textarea { overflow: auto; }
+
+optgroup { font-weight: bold; }
+
+input[type='text'], input[type='password'], textarea { background-color: #f0f0f0; color: #595959; padding-left: 5px; box-sizing: border-box; width: 200px; height: 30px; font-size: 12px; border-width: 1px; border-style: solid; border-color: #c4c4c4; border-image: initial; border-radius: 2px; outline: 0px; }
+
+textarea { height: 75px; }
+
+/* div.caption { width: 100%; height: 35px; line-height: 2.5em; color: #30a35d; font-size: 19px; padding-bottom: 20px; } */
+div.caption { width: 100%; height: 20px; line-height: 2.5em; color: #4990e2; font-size: 19px; padding-bottom: 0px; }
+
+.attributes { width: 100%; }
+
+.attributes .attribute { display: inline-block; list-style: none; white-space: nowrap; }
+
+.attributes .attribute .name, .attributes .attribute .value { display: inline-block; min-height: 35px; height: auto; line-height: 2.5em; vertical-align: top; font-size: 14px; }
+
+.attributes .attribute .name { text-align: right; width: 120px; white-space: nowrap; }
+
+.attributes .attribute .value { text-align: left; padding-left: 15px; width: 200px; white-space: normal; }
+
+.attributes .attribute .tooltip { position: absolute; text-align: center; left: 25%; }
+
+table.table { width: 100%; margin: 0; padding: 0; }
+
+table.table thead tr td, table.table thead tr th { background: #28394b; color: #FFF; }
+
+table.table tbody tr { color: #595959; }
+
+table.table tr td, table.table tr th { font-size: 14px; text-align: center; height: 29px; line-height: 29px; white-space: nowrap; }
+
+table.table tbody:not(.nBg) tr:nth-child(2n) { background: #e6e6e6; }
+
+/*table.table tr td a, table.table tr th a { text-decoration: none; color: #30a35d; }*/
+table.table tr td a, table.table tr th a { text-decoration: none; color: #4990e2; }
+
+table.table tbody tr td:last-child > a { margin-left: 15px; }
+
+.condition { width: 100%; min-height: 100px; padding: 3%; padding-top: 25px; padding-bottom: 25px; box-sizing: border-box; }
+
+.condition .attributes { display: block; width: 100%; }
+
+.condition .attribute { font-size: 0; display: inline-block; vertical-align: top; padding-bottom: 15px; }
+
+.condition .attribute.tooltip { width: 100%; }
+
+.condition .attribute > .name, .attribute > .value { display: inline-block; color: #000; vertical-align: top; font-size: 1.5vh; }
+
+.condition .attribute > .name { width: 180px; text-align: right; }
+
+.condition .attribute > .value { text-align: left; width: 200px; padding-left: 17px; padding-right: 17px; }
+
+.modelSelector { display: none; position: absolute; z-index: 999; margin-top: 0px; border: 1px solid #d9d9d9; background: #f0f0f0; width: 205px; height: 200px; overflow-y: auto; overflow-x: auto; }
+
+.Q-Tooltip { z-index: 9999; }
+
+/*# sourceMappingURL=evm_elements.css.map */

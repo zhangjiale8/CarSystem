@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.car.manage.mapper.item.ItemMapper">
+
+	<resultMap type="cn.car.manage.beans.orm.item.Item" id="item">
+		<id property="itemID" javaType="long" column="item_id" jdbcType="BIGINT" />
+		<result property="itemClassificationID" javaType="int"
+			column="item_classification_id" jdbcType="INTEGER" />
+		<result property="itemShelfTime" javaType="String" column="item_shelf_time"
+			jdbcType="VARCHAR" />
+		<result property="itemDownTime" javaType="String" column="item_down_time"
+			jdbcType="VARCHAR" />
+		<result property="itemHot" javaType="String" column="item_hot"
+			jdbcType="VARCHAR" />
+		<result property="itemName" javaType="String" column="item_name"
+			jdbcType="VARCHAR" />
+		<result property="itemPrice" javaType="double" column="item_price"
+			jdbcType="DOUBLE" />
+		<result property="itemColor" javaType="String" column="item_color"
+			jdbcType="VARCHAR" />
+		<result property="itemCode" javaType="String" column="item_code"
+			jdbcType="VARCHAR" />
+		<result property="itemState" javaType="String" column="item_state"
+			jdbcType="VARCHAR" />
+		<result property="itemModel" javaType="String" column="item_model"
+			jdbcType="VARCHAR" />
+		<result property="itemBrandName" javaType="String"
+		column="item_brand_name" jdbcType="VARCHAR" />
+		<result property="itemSeriesName" javaType="String"
+		column="item_series_name" jdbcType="VARCHAR" />
+		<result property="itemClassificationName" javaType="String" column="item_classification_name"
+			jdbcType="VARCHAR" />
+		<result property="itemStockNum" javaType="int" column="item_stock_num"
+			jdbcType="INTEGER" />
+			<result property="wareHouseID" javaType="int" column="warehouse_id"
+			jdbcType="INTEGER" />
+		<result property="itemSeriesID" javaType="int" column="item_series_id" jdbcType="INTEGER" />	
+		<association property="itemClass" javaType="cn.car.manage.beans.orm.item.classification.ItemClassification">
+			<id property="itemClassificationID" javaType="long" column="item_classification_id" jdbcType="INTEGER" />
+			<result property="itemClassificationName" javaType="String" column="item_classification_name"
+			jdbcType="VARCHAR" />
+		</association>
+	</resultMap>
+
+	<resultMap type="cn.car.manage.beans.orm.item.ItemAndBrand" id="itemAndBrand">
+		<id property="itemID" javaType="long" column="item_id" jdbcType="BIGINT" />
+		<result property="itemClassificationID" javaType="int"
+			column="item_classification_id" jdbcType="INTEGER" />
+		<result property="itemShelfTime" javaType="String" column="item_shelf_time"
+			jdbcType="VARCHAR" />
+		<result property="itemDownTime" javaType="String" column="item_down_time"
+			jdbcType="VARCHAR" />
+		<result property="itemHot" javaType="String" column="item_hot"
+			jdbcType="VARCHAR" />
+		<result property="itemName" javaType="String" column="item_name"
+			jdbcType="VARCHAR" />
+		<result property="itemPrice" javaType="double" column="item_price"
+			jdbcType="DOUBLE" />
+		<result property="itemColor" javaType="String" column="item_color"
+			jdbcType="VARCHAR" />
+		<result property="itemCode" javaType="String" column="item_code"
+			jdbcType="VARCHAR" />
+		<result property="itemState" javaType="String" column="item_state"
+			jdbcType="VARCHAR" />
+		<result property="itemModel" javaType="String" column="item_model"
+			jdbcType="VARCHAR" />
+			<result property="itemClassificationName" javaType="String" column="item_classification_name"
+			jdbcType="VARCHAR" />
+		<result property="itemStockNum" javaType="int" column="item_stock_num"
+			jdbcType="INTEGER" />
+			<result property="wareHouseID" javaType="int" column="warehouse_id"
+			jdbcType="INTEGER" />
+		<result property="itemBrandID" javaType="int" column="item_brand_id" jdbcType="INTEGER" />
+		<result property="itemBrandName" javaType="String"
+			column="item_brand_name" jdbcType="VARCHAR" />
+		<result property="itemBrandCity" javaType="String"
+		column="item_brand_city" jdbcType="VARCHAR" />
+		<result property="photoResource" javaType="String"
+			column="photo_resource" jdbcType="VARCHAR" />
+		<result property="createTime" javaType="String"
+			column="create_time" jdbcType="VARCHAR" />
+		<result property="spellID" javaType="int" column="spell_id"
+			jdbcType="INTEGER" />
+		<result property="itemClassificationID" javaType="int" column="item_classification_id" jdbcType="INTEGER" />
+		<result property="itemClassificationName" javaType="String"
+			column="item_classification_name" jdbcType="VARCHAR" />	
+		<result property="itemSeriesID" javaType="int" column="item_series_id" jdbcType="INTEGER" />
+		<result property="itemSeriesName" javaType="String"
+			column="item_series_name" jdbcType="VARCHAR" />
+		<result property="itemBrandID" javaType="int" column="item_brand_id"
+			jdbcType="INTEGER" />
+	</resultMap>
+	<!-- 用户全部字段 -->
+	<sql id="item_all_field">
+		item_classification_id,item_model,item_code,item_color,item_price,item_name,item_hot,item_shelf_time,item_brand_name,item_series_name
+	</sql>
+
+	<!-- 插入 -->
+	<sql id="item_add_field">
+		item_classification_id,item_shelf_time,user_join_date
+	</sql>
+	
+	<select id="getAllItemCode" resultMap="item">
+		select item_id,item_code from t_item where item_classification_id=#{itemClassificationID}
+	</select>
+	<select id="getItemByItemCode" resultMap="item">
+		select item_id,item_code from t_item where item_code=#{itemCode}
+	</select>
+	<select id="getItemByItemID" resultMap="item">
+		select item.item_id,item.item_name,item.item_color,item_classification_name,FROM_UNIXTIME(item.item_shelf_time,'%Y-%m-%d') as item_shelf_time,item.item_price,item.item_model,item.item_code,itemStock.warehouse_id,itemStock.item_stock_num from t_item item
+		LEFT JOIN t_item_stock itemStock
+		ON item.item_id=itemStock.item_id
+		LEFT JoIN t_item_classification class
+		ON item.item_classification_id=class.item_classification_id
+		where item.item_id=#{itemID}
+	</select>
+	<select id="selectItemInfoByItemID" resultMap="itemAndBrand">
+		SELECT
+		item.item_id,
+		item.item_color,
+		item.item_name,
+		item.item_price,
+		item.item_series_name,
+		item.item_brand_name,
+	  photo.photo_resource
+	FROM
+		t_item item
+	
+	LEFT JOIN t_item_photo photo 
+	on item.item_id= photo.item_id
+	where photo.photo_use=1
+	and item.item_id=#{itemID}
+	</select>
+	<select id="getItemAll" resultMap="itemAndBrand">
+			SELECT
+		item.item_id,
+		item.item_color,
+		item.item_name,
+		item.item_price,
+		item.item_series_name,
+		item.item_brand_name,
+	  photo.photo_resource
+	FROM
+		t_item item
+	
+	LEFT JOIN t_item_photo photo 
+	on item.item_id= photo.item_id
+	where item.item_classification_id =#{itemClassificationID} and photo.photo_use=1
+	and item.item_id in (
+	select item_id from t_item 
+	<where>
+		<if test="name!=null">
+	        <bind name="nameBind" value="'%'+name + '%'"/>
+	       		or item_name LIKE #{nameBind} 
+	    </if>
+	  	<if test="name!=null">
+	   		<bind name="nameBind" value="'%'+name + '%'"/>
+	       		or item_brand_name LIKE #{nameBind}
+	    </if>
+	    <if test="name!=null">
+	    	<bind name="nameBind" value="'%'+name + '%'"/>
+	       		or item_series_name LIKE #{nameBind}
+	    </if>
+    </where>
+	)
+		   
+		   
+	</select>
+	<select id="getItemOther" resultMap="itemAndBrand">
+			SELECT
+		item.item_id,
+		item.item_color,
+		item.item_name,
+		item.item_price,
+		item.item_series_name,
+		item.item_brand_name,
+	  photo.photo_resource
+	FROM
+		t_item item
+	LEFT JOIN t_item_photo photo 
+	on item.item_id= photo.item_id
+	where photo.photo_use=1 and item.item_classification_id =1
+	</select>
+	<insert id="addItem" useGeneratedKeys="true" keyProperty="itemID">
+		insert into t_item (<include refid="item_all_field"></include>) values (#{itemClassificationID},#{itemModel},#{itemCode},#{itemColor},#{itemPrice},#{itemName},#{itemHot},UNIX_TIMESTAMP(now()),#{itemBrandName},#{itemSeriesName})
+	</insert>
+</mapper>

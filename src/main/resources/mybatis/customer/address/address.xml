@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.car.manage.mapper..UserMapper">
+
+ <resultMap type="cn.car.manage.beans.orm.customer.address.CustomerAddress" id="address">
+    <id property="addressID" 					javaType="INTEGER"  column="address_id" 					jdbcType="INTEGER"/>
+  	<result property="customerID" 			javaType="INTEGER" 	column="user_id" 				jdbcType="INTEGER"/>
+ 	<result property="consignee" 				javaType="String" 	column="consignee" 						jdbcType="VARCHAR"/>
+    <result property="phoneNum" 			javaType="String" 	column="phone_num" 					jdbcType="VARCHAR"/>
+    <result property="zipCord" 			    javaType="String" 	column="zip_cord" 					jdbcType="VARCHAR"/>
+  	
+    <result property="address" 			    javaType="String" 	column="address"                     jdbcType="VARCHAR"/>
+  
+  </resultMap>	
+  
+  <!-- 用户全部字段 -->
+	<sql id="address_all_field">
+		address_id,user_id,consignee,phone_num,zip_cord,province_name,city_name,street_name,address
+	</sql>
+	
+	<!-- 插入 -->
+	<sql id="uaddress_add_field">
+	   user_id,consignee,phone_num,zip_cord,province_name,city_name,street_name,address
+
+	</sql>
+	
+  
+</mapper>

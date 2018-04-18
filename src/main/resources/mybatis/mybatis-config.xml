@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<mappers>
+		<!--管理员相关  -->
+		<mapper resource="mybatis/system/UserMapper.xml"/>
+		<mapper resource="mybatis/system/UserRoleMapper.xml"/>
+		<!-- 客户相关 -->
+		<mapper resource="mybatis/customer/CustomerMapper.xml"/>
+		<!-- 品牌相关 -->
+		<mapper resource="mybatis/item/brand/ItemBrandMapper.xml"/>
+		<mapper resource="mybatis/item/series/ItemBrandSeriesMapper.xml"/>
+		<mapper resource="mybatis/item/SpelLetterMapper.xml"/>
+		<!-- 商品进出库相关相关 -->
+		<mapper resource="mybatis/item/outLibrary/ItemOutLibraryOrderMapper.xml"/>
+		<mapper resource="mybatis/item/enterLibrary/ItemEnterLibraryOrderMapper.xml"/>
+		<!-- 商品相关 -->
+		<mapper resource="mybatis/item/ItemMapper.xml"/>
+		<!-- 商品属性相关 -->
+		<mapper resource="mybatis/item/attribute/ItemAttributeMapper.xml"/>
+		<mapper resource="mybatis/item/attribute/AttributeTypeMapper.xml"/>
+		<mapper resource="mybatis/item/attribute/AttributeInputTypeMapper.xml"/>
+		<mapper resource="mybatis/item/attribute/ItemAttributeValueMapper.xml"/>
+		<mapper resource="mybatis/item/attribute/ItemTypeAttributeMapper.xml"/>
+		
+		<!-- 留言相关 -->
+		<mapper resource="mybatis/item/guestbook/GuestBookMapper.xml"/>
+		<mapper resource="mybatis/item/guestbook/CommentMapper.xml"/>
+		
+		<!-- 仓库相关 -->
+		<mapper resource="mybatis/item/wareHouse/ItemWareHouseMapper.xml"/>
+		
+		<!-- 库存相关 -->
+		<mapper resource="mybatis/item/stock/ItemStockMapper.xml"/>
+		
+		<!-- 各个订单商品状态相关 -->
+		<mapper resource="mybatis/item/ItemAndOrderStateMapper.xml"/>
+		
+		<!-- 订单相关 -->
+		<mapper resource="mybatis/item/order/ItemOrderMapper.xml"/>
+		<mapper resource="mybatis/item/order/OrderDetailedMapper.xml"/>
+		<mapper resource="mybatis/item/order/LookCarOrderMapper.xml"/>
+		<mapper resource="mybatis/item/repair/RepairOrderMapper.xml"/>
+		<!-- 图片相关 -->
+		<mapper resource="mybatis/item/photo/ItemPhotoMapper.xml"/>
+	</mappers>
+</configuration>

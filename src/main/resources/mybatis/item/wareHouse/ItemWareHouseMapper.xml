@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.car.manage.mapper.item.itemWareHouse.ItemWareHouseMapper">
+
+	<resultMap type="cn.car.manage.beans.orm.item.wareHouse.ItemExistWareHouse" id="itemExistWareHouse">
+		<result property="itemID" javaType="long" column="item_id" jdbcType="BIGINT" />
+		<result property="itemName" javaType="String" column="item_name"
+			jdbcType="VARCHAR" />
+		<result property="itemPrice" javaType="double" column="item_price"
+			jdbcType="DOUBLE" />
+		<result property="itemColor" javaType="String" column="item_color"
+			jdbcType="VARCHAR" />
+		<result property="itemCode" javaType="String" column="item_code"
+			jdbcType="VARCHAR" />
+		<result property="itemState" javaType="int" column="item_state"
+			jdbcType="INTEGER" />
+		<result property="itemStockNum" javaType="int" column="item_stock_num"
+			jdbcType="INTEGER" />
+		<result property="wareHouseID" javaType="int" column="warehouse_id"
+			jdbcType="INTEGER" />
+		<result property="wareHouseName" javaType="String" column="warehouse_name"
+			jdbcType="VARCHAR" />
+			<result property="wareHouseKeeper" javaType="String" column="wareHouse_keeper"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap type="cn.car.manage.beans.orm.item.wareHouse.WareHouse" id="wareHouse">
+		<id property="wareHouseID" javaType="int" column="warehouse_id" jdbcType="INTEGER"/>
+		<result property="wareHouseKeeper" javaType="String" column="warehouse_keeper"
+			jdbcType="VARCHAR" />
+		<result property="wareHouseName" javaType="String" column="warehouse_name"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- 用户全部字段 -->
+	<sql id="item_all_field">
+		item_id,item_classification_id,item_shelf_time,user_join_date
+	</sql>
+
+	<!-- 插入 -->
+	<sql id="item_add_field">
+		item_classification_id,item_shelf_time,user_join_date
+	</sql>
+	<!-- 查询分页 -->
+	<select id="getWareHouseItemByItemNameOrItemCoudOrWareHouseName" resultMap="itemExistWareHouse">
+				SELECT
+			item.item_name,
+			item.item_color,
+			item.item_code,
+			item.item_price,
+			item.item_state,
+			item.item_id,
+			itemStock.item_stock_num,
+			wareHouse.warehouse_name,
+			wareHouse.warehouse_keeper,
+			wareHouse.warehouse_id
+		FROM
+			t_item item
+		LEFT JOIN t_item_stock itemStock ON item.item_id = itemStock.item_id
+		LEFT JOIN t_warehouse wareHouse ON itemStock.warehouse_id = wareHouse.warehouse_id
+		where item_stock_num !=0
+		   <if test="itemName !=null">
+		   <bind name="itemNameBind" value="'%'+itemName + '%'"/>
+		     and item.item_name LIKE #{itemNameBind}
+		   </if>
+		   <if test="itemCode !=null">
+		   <bind name="itemCodeBind" value="'%'+itemCode + '%'"/>
+		     and item.item_code like #{itemCodeBind}
+		   </if>
+		   <if test="wareHouseID !=-1">
+		     and wareHouse.warehouse_id =#{wareHouseID}
+		   </if>
+		   <if test="itemClassificationID !=0">
+		     and item.item_classification_id =#{itemClassificationID} 
+		   </if>
+	 	
+	</select>
+
+	<!-- 根据商品ID查询 -->
+	<select id="getItemExistWareHouseByItemID" resultMap="itemExistWareHouse">
+		SELECT
+			itemStock.item_id,
+			itemStock.item_stock_num,
+			wareHouse.warehouse_name,
+			wareHouse.warehouse_id
+		FROM
+			t_item_stock itemStock
+		LEFT JOIN t_warehouse wareHouse ON itemStock.warehouse_id = wareHouse.warehouse_id
+		where itemStock.item_id=#{itemID}
+	</select>
+	<!-- 删除 -->
+	<delete id="deleteWareHouseItem" parameterType="list">
+		DELETE FROM t_item WHERE item_id IN
+		<foreach collection="list" item="itemID" open="(" close=")" separator=",">
+			#{itemID}
+		</foreach>
+	</delete>
+	<!-- 更新状态 -->
+	<update id="updateItemStateByItemIdAndItemStateID">
+    	UPDATE t_item SET item_state=#{itemStateID}
+    	WHERE item_id = #{itemID}
+  	</update>
+	<!-- 更新商品位置 -->
+	<update id="updateItemWareHousePosition">
+    	UPDATE t_item_stock  SET warehouse_id=#{wareHouseID}
+    	WHERE item_id =#{itemID}
+  	</update>
+  	<select id="getAllWareHouse" resultMap="wareHouse">
+  		select warehouse_id,warehouse_name from  t_warehouse
+  	</select>
+  	<insert id="addWareHouse">
+  		INSERT INTO t_warehouse (warehouse_keeper,warehouse_name) VALUES (#{warehouseKeeper},#{warehouseName})
+  	</insert>
+</mapper>

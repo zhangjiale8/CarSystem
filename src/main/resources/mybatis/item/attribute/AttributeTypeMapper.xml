@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.car.manage.mapper.item.attribute.AttributeTypeMapper">
+
+	<resultMap type="cn.car.manage.beans.orm.item.attribute.AttributeType" id="attributeType">
+		<id property="attributeTypeID" javaType="int" column="attribute_type_id" jdbcType="INTEGER" />
+		<result property="attributeTypeName" javaType="String"
+			column="attribute_type_name" jdbcType="VARCHAR" />
+		<result property="attributeTypeShowName" javaType="String" column="attribute_type_show_name"
+			jdbcType="VARCHAR" />
+
+	</resultMap>
+
+	
+	<!-- 用户全部字段 -->
+	<sql id="attributeType_all_field">
+		attribute_type_id,attribute_type_name,attribute_type_show_name
+	</sql>
+
+	<!-- 插入 -->
+	<sql id="attributeType_add_field">
+		attribute_type_name,attribute_type_show_name
+	</sql>
+
+	<!-- 所有字段 -->
+	<sql id="attributeType_alias">
+		attributeType.attribute_type_id,attributeType.attribute_type_name,attributeType.attribute_type_show_name
+	</sql>
+</mapper>

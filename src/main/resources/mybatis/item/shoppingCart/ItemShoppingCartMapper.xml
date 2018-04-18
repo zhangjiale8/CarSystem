@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.car.manage.mapper.item.shoppingCart.ItemShoppingCartMapper">
+
+	<resultMap type="cn.car.manage.beans.orm.item.shoppingCart.ShoppingCart"
+		id="shoppingCart">
+		<id property="shopCartID" javaType="int" column="shop_cart_id"
+			jdbcType="INTEGER" />
+		<result property="itemID" javaType="long" column="item_id"
+			jdbcType="BIGINT" />
+		<result property="customerID" javaType="int" column="user_id"
+			jdbcType="INTEGER" />
+		<result property="itemNum" javaType="int" column="item_num"
+			jdbcType="INTEGER" />
+		<result property="createDate" javaType="int" column="add_date"
+			jdbcType="INTEGER" />
+	</resultMap>
+
+
+	<!-- 全部字段 -->
+	<sql id="cart_all_field">
+		shop_cart_id,item_id,user_id,item_num,add_date
+	</sql>
+
+	<!-- 插入 -->
+	<sql id="cart_add_field">
+		item_id,user_id,item_num,add_date
+	</sql>
+
+
+</mapper>

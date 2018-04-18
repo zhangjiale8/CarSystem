@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.car.manage.mapper.system.UserMapper">
+
+ <resultMap type="cn.car.manage.beans.orm.system.User" id="userMap">
+    <id property="userID" 					    javaType="INTEGER" 		column="user_id" 						jdbcType="INTEGER"/>
+    <result property="userName" 				javaType="String" 	column="user_name" 						jdbcType="VARCHAR"/>
+    <result property="userShowName" 				javaType="String" 	column="user_show_name" 						jdbcType="VARCHAR"/>
+    <result property="userPassWord" 			javaType="String" 	column="user_password" 					jdbcType="VARCHAR"/>
+    <result property="userPhone" 			    javaType="String" 	column="user_phone" 					jdbcType="VARCHAR"/>
+  	<result property="userJoinDate" 			javaType="String" 	column="user_join_date" 				jdbcType="VARCHAR"/>
+  	<result property="state" 			javaType="INTEGER" 	column="state" 				jdbcType="INTEGER"/>
+  </resultMap>	
+  <!-- 用户全部字段 -->
+	<sql id="user_all_field">
+		user_id,user_name,user_show_name,user_phone,user_password
+	</sql>
+	<sql id="user_role">
+	    user.user_id,user.user_show_name,user.user_name,user.user_password,user.user_phone,userRole.role_id,user.state,FROM_UNIXTIME(user.user_join_date) as user_join_date
+	</sql>
+	<!-- 插入 -->
+	<sql id="user_add_field">
+	    user_name,user_password,user_phone,user_join_date,user_show_name,state
+
+	</sql>
+  
+   <!-- 查询,根据ID -->
+  <select id="getByUserID" resultMap="userMap">
+	 SELECT <include refid="user_all_field"></include> FROM t_user WHERE user_id = #{userID}
+  </select>
+  
+  <!-- 添加 -->
+  <insert id="add" useGeneratedKeys="true" keyProperty="userID" keyColumn="user_id">
+    INSERT INTO t_user (<include refid="user_add_field"></include>) VALUES (#{userName},#{userPassWord},#{userPhone},UNIX_TIMESTAMP(now()),#{userShowName},#{state});
+  </insert>
+  
+  <!-- 更新 -->
+  <update id="update">
+    UPDATE t_user SET user_name=#{userName},user_show_name=#{userShowName},user_phone=#{userPhone},user_password=#{userPassWord}
+    WHERE user_id = #{userID}
+  </update>
+  <!-- 更新状态 -->
+  <update id="updateState">
+    UPDATE t_user SET state=#{state}
+    WHERE user_id = #{userID}
+  </update>
+  <!-- 删除 -->
+  <delete id="delete" parameterType="list">
+		DELETE FROM t_user WHERE user_id IN
+		<foreach collection="list" item="userID" open="(" close=")" separator=",">
+			#{userID}
+		</foreach>
+	</delete>
+	
+	<!-- 查询用户与角色的关系，根据用户ID -->
+  <select id="getUserRoleByUserId" resultType="int">
+      SELECT role_id FROM t_user_role WHERE user_id = #{userID}
+  </select>
+  
+  <select id="getUserInfoWithName"  resultMap="userMap">
+   SELECT <include refid="user_role"></include> FROM t_user user
+   left join t_user_role userRole
+   on  user.user_id=userRole.user_id
+	 <where>
+	   <if test="userName !=null">
+	     user.user_name =#{userName}
+	   </if>
+	 </where>
+  </select>
+  
+  <select id="selectAll" resultMap="userMap">
+  	SELECT user_id,user_name FROM t_user
+  </select>
+</mapper>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.car.manage.mapper.item.guestbook.GuestBookMapper">
+
+	<resultMap type="cn.car.manage.beans.orm.item.guestbook.GuestBook" id="guestBook">
+		<id property="guestBookID" javaType="int" column="guestBook_id" jdbcType="INTEGER" />
+		<result property="guestBookContent" javaType="String"
+			column="guestBook_content" jdbcType="VARCHAR" />
+		<result property="customerID" javaType="int" column="user_id"
+			jdbcType="INTEGER" />
+		<result property="guestBookDate" javaType="String" column="guestBook_date"
+			jdbcType="VARCHAR" />
+		<result property="handleState" javaType="int" column="handle_state"
+			jdbcType="INTEGER" />
+		<result property="replyContent" javaType="String"
+			column="reply_content" jdbcType="VARCHAR" />
+			<result property="replyDate" javaType="String" column="reply_date"
+			jdbcType="VARCHAR" />
+		<result property="userName" javaType="String"
+			column="user_name" jdbcType="VARCHAR" />	
+
+	</resultMap>
+
+	
+	<!-- 全部字段 -->
+	<sql id="guestbook_all_field">
+		guestbook_id,guestbook_content,user_id,guestbook_date,handle_state,reply_content
+	</sql>
+
+	<!-- 插入 -->
+	<sql id="guestbook_add_field">
+		guestbook_content,user_id,guestbook_date,handle_state,reply_content
+	</sql>
+
+	<!-- 模糊查分页 -->
+	<select id="getGuestBookByGuestBookNameAndGuestBookID" resultMap="guestBook">
+		select guestbook.guestBook_id,guestbook.guestBook_content,FROM_UNIXTIME(guestbook.guestBook_date) as guestBook_date,guestbook.handle_state,guestbook.reply_content,users.user_name
+		from t_guestbook guestbook
+		left join t_user users
+		on guestbook.user_id=users.user_id
+		<where>
+		   <if test="userName !=null">
+		     users.user_name =#{userName}
+		   </if>
+		   <if test="handleState !=0">
+		     and guestbook.handle_state =#{handleState}
+		   </if>
+	 	</where>
+	</select>
+	<select id="getAllGuestBook" resultMap="guestBook">
+		select guestbook.guestBook_id,guestbook.guestBook_content,FROM_UNIXTIME(guestbook.guestBook_date) as guestBook_date,
+		guestbook.handle_state,guestbook.reply_content,users.user_name,FROM_UNIXTIME(guestbook.reply_date) as reply_date
+		from t_guestbook guestbook
+		left join t_user users
+		on guestbook.user_id=users.user_id
+		<where>
+		   <if test="userName !=null">
+		     users.user_name =#{userName}
+		   </if>
+		</where>
+	</select>
+	<!-- 根据留言ID 查询 -->
+	<select id="getGuestBookByGuestBookID" resultMap="guestBook">
+		select guestbook.guestBook_id,guestbook.guestBook_content,FROM_UNIXTIME(guestbook.guestBook_date) as guestBook_date,guestbook.handle_state,guestbook.reply_content,users.user_name
+		from t_guestbook guestbook
+		left join t_user users
+		on guestbook.user_id=users.user_id
+		where guestbook.guestBook_id=#{guestBookID}
+	</select>
+	<!-- 删除 -->
+	<delete id="deleteGuestBookByGuestBookID" parameterType="list">
+		DELETE FROM t_guestbook WHERE guestBook_id IN
+		<foreach collection="list" item="guestBookID" open="(" close=")" separator=",">
+			#{guestBookID}
+		</foreach>
+	</delete>
+		<!--根据用户名删除-->
+	<delete id="deleteGuestBookByUserName" parameterType="list">
+		DELETE FROM t_guestbook guestBook
+		LEFT JOIN t_user users
+		ON guestBook.user_id=users.user_id
+		WHERE users.user_name=#{userName}
+	</delete>
+	<!-- 更新状态 -->
+	<update id="updateGuestBookState">
+    	UPDATE t_guestbook SET handle_state=#{handleState}
+    	WHERE guestBook_id = #{guestBookID}
+  	</update>
+	<!-- 更新回复内容和时间 -->
+	<update id="replyGuestBookContent">
+    	UPDATE t_guestbook SET reply_content=#{replyContent},reply_date=UNIX_TIMESTAMP(now())
+    	WHERE guestBook_id = #{guestBookID}
+  	</update>
+  	
+  	<!-- 根据留言ID 查询 -->
+	<select id="getGuestBookByUserName" resultMap="guestBook">
+		select guestbook.guestBook_id,guestbook.guestBook_content,guestbook.guestBook_date,guestbook.handle_state,guestbook.reply_content,users.user_name,,FROM_UNIXTIME(guestBook.reply_date) as reply_date
+		from t_guestbook guestbook
+		left join t_user users
+		on guestbook.user_id=users.user_id
+		<where>
+		   <if test="userName !=null">
+		     users.user_name =#{userName}
+		   </if>
+		</where>
+	</select>
+	<insert id="addGuestBook">
+		insert into t_guestbook (guestbook_content,user_id,guestbook_date) values (#{guestBookContent},#{customerID},UNIX_TIMESTAMP(#{guestBookDate}))
+	</insert>
+</mapper>

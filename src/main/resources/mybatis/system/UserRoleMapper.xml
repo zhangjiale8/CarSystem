@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.car.manage.mapper.system.UserRoleMapper">
+
+ <resultMap type="cn.car.manage.beans.orm.system.UserRole" id="userRoleMap">
+    <result property="userID" 					    javaType="INTEGER" 		column="user_id" 						jdbcType="INTEGER"/>
+    
+  	<result property="roleID" 			javaType="INTEGER" 	column="role_id" 				jdbcType="INTEGER"/>
+  	<association property="user" 		resultMap="userMap"></association>
+  	<association property="role" 		resultMap="roleMap"></association>
+  </resultMap>
+  <resultMap type="cn.car.manage.beans.orm.system.User" id="userMap">
+    <id property="userID" 					    javaType="INTEGER" 		column="user_id" 						jdbcType="INTEGER"/>
+    <result property="userName" 				javaType="String" 	column="user_name" 						jdbcType="VARCHAR"/>
+    <result property="userShowName" 				javaType="String" 	column="user_show_name" 						jdbcType="VARCHAR"/>
+    <result property="userPassWord" 			javaType="String" 	column="user_password" 					jdbcType="VARCHAR"/>
+    <result property="userPhone" 			    javaType="String" 	column="user_phone" 					jdbcType="VARCHAR"/>
+  	<result property="userJoinDate" 			javaType="String" 	column="user_join_date" 				jdbcType="VARCHAR"/>
+  	<result property="state" 			javaType="INTEGER" 	column="state" 				jdbcType="INTEGER"/>
+  </resultMap>	
+  <resultMap type="cn.car.manage.beans.orm.system.Role" id="roleMap">
+    <result property="roleId" 					javaType="int" 		column="role_id" 						jdbcType="INTEGER"/>
+    <result property="roleName" 				javaType="String" 	column="role_name" 						jdbcType="VARCHAR"/>
+    <result property="roleIdentity" 			javaType="String" 	column="role_identity" 					jdbcType="VARCHAR"/>
+  </resultMap>	
+  <!-- 用户全部字段 -->
+	<sql id="all_field">
+		user_id,role_id
+	</sql>
+	<sql id="user_role_all_field">
+		user.user_id,user.user_name,user.user_show_name,user.user_phone,FROM_UNIXTIME(user.user_join_date) as user_join_date,userRole.role_id,user.state
+	</sql>
+   <!-- 查询,根据ID -->
+  <select id="getUserRoleByUserID" resultMap="userRoleMap">
+	 SELECT <include refid="all_field"></include> FROM t_user_role WHERE user_id = #{userID}
+  </select>
+  <insert id="addUserRole" >
+   INSERT INTO t_user_role (<include refid="all_field"></include>) VALUES (#{userID},#{roleID});
+  </insert>
+  
+  <!-- 查询,根据名称 -->
+  <select id="getUserByUserName" resultMap="userRoleMap">
+	 SELECT <include refid="user_role_all_field"></include> FROM t_user_role userRole
+	 left join t_user user
+	 on userRole.user_id=user.user_id
+	 left join t_role role
+	 on userRole.role_id=role.role_id
+	 where 1=1
+          <choose>
+          <when test="userName!=null">
+          and user_name=#{userName} and userRole.role_id=1
+          </when>
+          <otherwise>
+          and userRole.role_id=1
+          </otherwise>
+          </choose>
+  </select>
+</mapper>

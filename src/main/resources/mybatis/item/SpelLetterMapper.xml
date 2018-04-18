@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.car.manage.mapper.item.SpelLetterMapper">
+
+ <resultMap type="cn.car.manage.beans.orm.item.SpelLetter" id="spelLetter">
+    <id property="spellID" 					    javaType="INTEGER" 		column="spell_id" 						jdbcType="INTEGER"/>
+    <result property="spelLetter" 				javaType="String" 	column="spell_letter" 						jdbcType="VARCHAR"/>
+    
+  </resultMap>	
+  <!-- 用户全部字段 -->
+	<sql id="field">
+		spellID,spelLetter
+	</sql>
+	
+  
+   <!-- 查询,根据ID -->
+  <select id="spelLetterIdByLetterName" resultType="INTEGER">
+	 SELECT spell_id FROM t_spell_letter WHERE spell_letter = #{letterName}
+  </select>
+  
+
+  
+</mapper>

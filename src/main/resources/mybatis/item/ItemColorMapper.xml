@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.car.manage.mapper.item.ItemColorMapper">
+
+	<resultMap type="cn.car.manage.beans.orm.item.ItemColor" id="itemColor">
+		<id property="itemColorID" javaType="int" column="color_id" jdbcType="INTEGER" />
+		<result property="itemColorName" javaType="String" column="color_name"
+			jdbcType="String" />
+	</resultMap>
+
+	<!-- 用户全部字段 -->
+	<sql id="color_all_field">
+		color_id,color_name
+	</sql>
+
+	<!-- 插入 -->
+	<sql id="color_add_field">
+		color_name
+	</sql>
+
+</mapper>

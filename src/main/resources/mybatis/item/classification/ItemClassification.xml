@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.car.manage.mapper.item.classification.ItemClassificationMapper">
+
+	<resultMap type="cn.car.manage.beans.orm.item.classification.ItemClassification" id="itemClassification">
+		<id property="itemClassificationID" javaType="int" column="item_classification_id" jdbcType="INTEGER" />
+		<result property="itemClassificationName" javaType="String"
+			column="item_classification_name" jdbcType="VARCHAR" />
+	</resultMap>
+
+	
+	<!-- 全部字段 -->
+	<sql id="all_field">
+		item_classification_id,item_classification_name
+	</sql>
+
+	<!-- 插入 -->
+	<sql id="add_field">
+		item_classification_name
+	</sql>
+
+	
+</mapper>
